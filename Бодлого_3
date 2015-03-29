@@ -1,0 +1,58 @@
+#include "C:\Users\Uujuu\Desktop\ES304\PICC\LAB_2.h"
+
+
+#bit TMR1ON=0xfcd.0
+#byte ADCON0=0x01f
+#int_TIMER1
+void TIMER1_isr() 
+{
+static char i=0;
+int data[9];
+   set_timer1(55535);
+   set_adc_channel(0);
+   delay_us(15);
+   data[i]=read_adc(adc_start_and_read);
+   i++;
+}
+
+
+
+void main()
+{
+   int i,data[9];
+   float sum,average;
+   
+   setup_adc_ports(AN0);
+   setup_adc(ADC_CLOCK_INTERNAL);
+   setup_psp(PSP_DISABLED);
+   setup_spi(FALSE);
+   setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1);
+   setup_timer_1(T1_INTERNAL | T1_DIV_BY_1);
+   setup_timer_2(T2_DISABLED,0,1);
+   setup_comparator(NC_NC_NC_NC);
+   setup_vref(FALSE);
+   enable_interrupts(INT_TIMER1);
+   enable_interrupts(GLOBAL);
+   
+   ADCON0 |=0b00000001;
+   
+   TMR1ON=1;
+   set_tris_b(0x00);
+
+   // TODO: USER CODE!!
+   
+   for(i=0;i>10;i++){
+      sum=sum+data[i];
+   }
+      average=sum/10;
+      printf("average=%f/r/n",average);
+      
+   set_timer1(55535);
+   
+   while(1){
+       output_b(0xff);
+       delay_ms(200);
+       output_b(0x00);
+       delay_ms(200);
+     }
+    }
