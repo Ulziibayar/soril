@@ -1,0 +1,51 @@
+#include "C:\Users\Uujuu\Desktop\ES304\PICC\soril_1.h"
+#byte ADCON0=0x01f
+
+void main()
+{   
+   char adc_value;
+ 
+   
+   float volt_1;
+   float volt_2;
+   float volt_3;
+
+   setup_adc_ports(AN0_AN1_AN3 );
+   setup_adc(ADC_clock_internal);
+   setup_psp(PSP_DISABLED);
+   setup_spi(FALSE);
+   setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1);
+   setup_timer_1(T1_DISABLED);
+   setup_timer_2(T2_DISABLED,0,1);
+   setup_comparator(NC_NC_NC_NC);
+   setup_vref(FALSE);
+   // TODO: USER CODE!!
+   ADCON0 |=0b00000001;
+   
+   while(1){
+   set_adc_channel(0);
+   delay_us(15);
+   adc_value=read_adc(adc_start_and_read);
+   volt_1=adc_value;
+   
+   set_adc_channel(2); //3v
+   delay_us(15);
+   adc_value_h=read_adc(adc_start_and_read);
+   volt_2=adc_value_h;
+
+
+ set_adc_channel(4); //1.5
+   delay_us(15);
+   adc_value_l=read_adc(adc_start_and_read);
+   volt_3=adc_value_l;
+   if(volt_1>| volt_1<volt_2){
+      printf("NORMAL/r/n");
+   }
+   else if(volt_1<volt_3){
+      printf("LOWER_LIMIT/r/n");
+   }
+   else 
+       printf("UPPER_LEVEL/r/n");
+      
+      }
+  }
