@@ -1,0 +1,52 @@
+#include "C:\Users\Uujuu\Desktop\ES304\PICC\soril_2.h"
+#byte ADCON0=0x01f
+   
+void main()
+{
+   char temp,pres;
+   float v_temp,v_pres,temperature,pressure;
+   
+   setup_adc_ports(AN0_AN1_AN3);
+   setup_adc(ADC_CLOCK_INTERNAL);
+   setup_psp(PSP_DISABLED);
+   setup_spi(FALSE);
+   setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1);
+   setup_timer_1(T1_DISABLED);
+   setup_timer_2(T2_DISABLED,0,1);
+   setup_comparator(NC_NC_NC_NC);
+   setup_vref(FALSE);
+   
+   ADCON0 |=0b00000001;
+   set_tris_b(0x00);
+   
+   // TODO: USER CODE!!
+   
+   while(1){
+   set_adc_channel(0);
+   delay_us(15);
+   temp=read_adc(AN0);
+   v_temp=temp;
+   
+   set_adc_channel(1); 
+   delay_us(15);
+   pres=read_adc(adc_start_and_read);
+   v_pres=pres;
+   
+   temperature=25*v_temp+15.8;
+   pressure=100*v_pres+20;
+   
+   if(temperature>25 | temperature<50){
+      if(pressure>100 | pressure<200){
+         printf("NORMAL\r\n");
+         delay_us(15);
+         }
+   }
+   else 
+       printf("WARNING\r\n");
+       delay_us(15);
+       output_b(0xff);
+       delay_ms(250);
+       output_b(0x00);
+       delay_ms(250);
+      }
+   }
